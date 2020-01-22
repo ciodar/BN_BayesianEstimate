@@ -1,0 +1,82 @@
+{
+    "V": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+    ],
+    "E": {
+        "E": [],
+        "D": [],
+        "A": [
+            "B",
+            "C"
+        ],
+        "C": [
+            "D",
+            "E"
+        ],
+        "B": [
+            "D"
+        ]
+    },
+    "F": {
+        "A": {
+            "values": [
+                "Present",
+                "Absent"
+            ],
+            "parents": [],
+            "cpt": [0.2]
+        },
+        "B": {
+            "values": [
+                "Increased",
+                "Not increased"
+            ],
+            "parents": ["A"],
+            "cpt": [
+                0.8,
+                0.2
+            ]
+        },
+        "C": {
+            "values": [
+                "Present",
+                "Absent"
+            ],
+            "parents": ["A"],
+            "cpt": [
+                0.2,
+                0.05
+            ]
+        },
+        "D":{
+            "values": [
+                "Present",
+                "Absent"
+            ],
+            "parents": ["B","C"],
+            "cpt": [
+                0.8,
+                0.9,
+                0.7,
+                0.05
+            ]
+        },
+        "E": {
+            "values": [
+                "Present",
+                "Absent"
+            ],
+            "parents": [
+                "C"
+            ],
+            "cpt": [
+                0.8,
+                0.6
+            ]
+        }
+    }
+}
