@@ -20,12 +20,14 @@ class Node:
 
     def getCPT(self):
         return self.cpt
-
+    #Returns domain cardinality
     def card(self):
         return len(self.domain)
     def scope(self):
         scope = [self.name]
-        scope.extend(self.parents)
+        p = self.parents
+        p.sort()
+        scope.extend(p)
         return scope
     def value_idx(self, val):
         try:

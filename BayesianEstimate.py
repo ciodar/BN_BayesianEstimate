@@ -1,18 +1,27 @@
 import csv
 import numpy as np
 from BayesianNetwork import BayesianNet
-def BE(csvFile, network):
+def BE(bn,csvFile):
     #Gets values for each variable
     #for i, n in enumerate(network.network.keys):
     #    network.network[n]['values'] = list(np.unique(data[:, i]))
-    network.getNodes
-    obs_dict = dict([(rv, []) for rv in network.getNodes()])
+    obs_dict = dict([(rv, []) for rv in bn.getNodes()])
     with open(csvFile) as csvfile:
         reader = csv.DictReader(csvfile, delimiter=';')
         row_dict = []
         for row in reader:
             row_dict.append(row)
-        bayes_estimator(network,row_dict)
+    obs_dict = dict([(rv, []) for rv in bn.getNodes()])
+
+    for row in row_dict:
+        # store the observation of each variable in the row
+        obs_dict = dict([(rv, row[rv]) for rv in bn.getNodes()])
+        # loop through each RV and increment its observed parent-self value
+        for rv in bn.getNodes():
+            rv_dict = {n: obs_dict[n] for n in obs_dict if n in bn.nodes[rv].scope()}
+            offset = bn.cpt_indices(target=bn.nodes[rv], val_dict=rv_dict)
+            bn.nodes[rv].cpt[offset] += 1
+
 
 def bayes_estimator(bn, data):
     """
@@ -99,3 +108,14 @@ def arrayBE(arr):
         bn.readNetwork("resources/cancer3.bn")
         arr[i][0] = bn
         BE(arr[i][1], arr[i][0])
+
+if __name__ == "__main__":
+    bn = BayesianNet()
+    bn.readNetwork("resources/cancer3.bn")
+    csvFile ='resources/datasets/10Cases.csv'
+    with open(csvFile) as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=';')
+        tuples = []
+        for row in reader:
+            tuples.append(tuple(row[v] for v in bn.getNodes()))
+        print(tuples)

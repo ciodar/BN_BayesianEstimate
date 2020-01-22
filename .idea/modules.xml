@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/AIProject.iml" filepath="$PROJECT_DIR$/.idea/AIProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/BN_BayesianEstimate.iml" filepath="$PROJECT_DIR$/.idea/BN_BayesianEstimate.iml" />
     </modules>
   </component>
 </project>
