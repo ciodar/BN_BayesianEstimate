@@ -4,7 +4,7 @@ import BayesianNetwork
 #Calculates Kullback-Leibler divergency
 def calculateKLDivergency(bayesianNet):
     KLdivergence = 0.0
-    for t in combinations(bayesianNet):
+    for t in combinations(bayesianNet.nodes[v] for v in bayesianNet.getNodes()):
         d = dict()
         for i,w in enumerate(bayesianNet.getNodes()):
             d[w] = t[i]
@@ -20,8 +20,8 @@ def meanKL(arr):
         mean += arr[i][0].getDivergenceKL()
     return mean/len(arr)
 
-def combinations(bayesianNet):
+def combinations(nodes):
     comb_list = []
-    for k,v in bayesianNet.nodes.items():
+    for v in nodes:
         comb_list.append(v.domain)
     return list(itertools.product(*comb_list))

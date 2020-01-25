@@ -1,12 +1,12 @@
 from BayesianNetwork import BayesianNet
 import numpy as np
-from MaximumLikelihood import MLE, arrayMLE,static_MLE
+#from MaximumLikelihood import MLE, arrayMLE,static_MLE
 from KLDivergenceCalculation import calculateKLDivergency, meanKL,combinations
-from BayesianEstimate import arrayBE,BE
-    bn = BayesianNet()
+from BayesianEstimate import bayes_estimator
+bn = BayesianNet()
 bn.readNetwork("resources/cancer3.bn")
 #comb = combinations(bn)
-x = bn.cpt_indices(bn.nodes["B"],dict({'A': 'Present', 'B':'Not increased','C':'Present','D':'Absent','E':'Present'}))
+#x = bn.cpt_indices(bn.nodes["B"],dict({'A': 'Present', 'B':'Not increased','C':'Present','D':'Absent','E':'Present'}))
 
 #Calculate KL divergency for more datasets of lenght 10 learning parameter from ech trhough Maximum Likelihood
 #array10 = np.array([[BayesianNet, '10Cases.csv']])#, [BayesianNet, '10_1Cases.csv'], [BayesianNet, '10_2Cases.csv'],
@@ -14,7 +14,7 @@ x = bn.cpt_indices(bn.nodes["B"],dict({'A': 'Present', 'B':'Not increased','C':'
                         #[BayesianNet, '10_6Cases.csv'], [BayesianNet, '10_7Cases.csv'], [BayesianNet, '10_8Cases.csv'],
                         #[BayesianNet, '10_9Cases.csv'], [BayesianNet, '10_10Cases.csv']])
 
-BE(bn, 'resources/datasets/10Cases.csv')
+bayes_estimator(bn, 'resources/datasets/10000Cases.csv')
 bn.plot()
 #arrayBE(array10)
 # arrayMLE(array10)

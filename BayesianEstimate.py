@@ -1,29 +1,9 @@
 import csv
 import numpy as np
 from BayesianNetwork import BayesianNet
-def BE(bn,csvFile):
-    #Gets values for each variable
-    #for i, n in enumerate(network.network.keys):
-    #    network.network[n]['values'] = list(np.unique(data[:, i]))
-    obs_dict = dict([(rv, []) for rv in bn.getNodes()])
-    with open(csvFile) as csvfile:
-        reader = csv.DictReader(csvfile, delimiter=';')
-        row_dict = []
-        for row in reader:
-            row_dict.append(row)
-    obs_dict = dict([(rv, []) for rv in bn.getNodes()])
+from KLDivergenceCalculation import combinations
 
-    for row in row_dict:
-        # store the observation of each variable in the row
-        obs_dict = dict([(rv, row[rv]) for rv in bn.getNodes()])
-        # loop through each RV and increment its observed parent-self value
-        for rv in bn.getNodes():
-            rv_dict = {n: obs_dict[n] for n in obs_dict if n in bn.nodes[rv].scope()}
-            offset = bn.cpt_indices(target=bn.nodes[rv], val_dict=rv_dict)
-            bn.nodes[rv].cpt[offset] += 1
-
-
-def bayes_estimator(bn, data):
+def bayes_estimator(bn, csvFile):
     """
     Bayesian Estimation method of parameter learning.
     This method proceeds by either 1) assuming a uniform prior
@@ -73,6 +53,11 @@ def bayes_estimator(bn, data):
     Notes
     -----
     """
+    with open(csvFile) as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=';')
+        data = []
+        for row in reader:
+            data.append(row)
     equiv_sample = len(data)
 
     obs_dict = dict([(rv, []) for rv in bn.getNodes()])
@@ -107,7 +92,7 @@ def arrayBE(arr):
         bn = BayesianNet()
         bn.readNetwork("resources/cancer3.bn")
         arr[i][0] = bn
-        BE(arr[i][1], arr[i][0])
+        bayes_estimator(arr[i][1], arr[i][0])
 
 if __name__ == "__main__":
     bn = BayesianNet()
