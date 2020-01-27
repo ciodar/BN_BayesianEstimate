@@ -3,7 +3,7 @@ from KLDivergenceCalculation import combinations
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
-import itertools
+#import itertools
 import json
 import csv
 
@@ -29,45 +29,60 @@ class BayesianNet:
             self.nodes[v].domain=inputNetwork['F'][v]['values']
             for p in inputNetwork['F'][v]['parents']:
                 self.nodes[v].parents.append(p)
-            self.nodes[v].cpt=np.ones(shape=(len(inputNetwork['F'][v]['cpt']),1))
-            self.nodes[v].obs = np.zeros(shape=(len(inputNetwork['F'][v]['cpt']), 1))
+            self.nodes[v].cpt=np.zeros(shape=(len(inputNetwork['F'][v]['cpt']),1))
+            self.nodes[v].alphas = inputNetwork['F'][v]['alphas']
             self.nodes[v].originalcpt = inputNetwork['F'][v]['cpt']
 
     def getDivergenceKL(self):
         return self.divergenceKL
     def setDivergenceKL(self, div):
         self.divergenceKL = div
+    def getNode(self,key):
+        return self.nodes[key]
     def getNodes(self):
+        return list(self.nodes.values())
+    def getNodeKeys(self):
         return list(self.nodes.keys())
 
     def factor(self,rv,val_dict):
-        return rv.cpt[self.cpt_idx(rv,val_dict)]
+        return rv.cpt[self.cpt_indices(rv,val_dict)]
     def original_factor(self,rv,val_dict):
         return rv.originalcpt[self.original_cpt_indices(rv,val_dict)]
 
     def combination_size(self):
         size = 1
         for v in self.getNodes():
-            size *= self.nodes[v].card()
+            size *= v.card()
         return size
+    def stride(self, rv, n):
+        if n==rv.name:
+            return 1
+        else:
+            card_list = [rv.card()]
+            card_list.extend([self.nodes[p].card() for p in rv.parents])
+            n_idx = rv.parents.index(n) + 1
+            return int(np.prod(card_list[0:n_idx]))
 
     def full_joint(self,val_dict):
         prod = 1
-        for i in self.nodes.values():
-            prod*= self.factor(i,val_dict)
+        for n in self.getNodes():
+            t = dict((k, val_dict[k]) for k in n.scope())
+            prod*= self.factor(n,t)
         return prod
 
     def original_full_joint(self,val_dict):
         prod = 1
-        for i in self.nodes.values():
-            prod*= self.original_factor(i,val_dict)
+        for n in self.getNodes():
+            t = dict((k, val_dict[k]) for k in n.scope())
+            prod*= self.original_factor(n,t)
         return prod
 
     def cpt_idx(self, target, tuple):
         d = []
-        comb = combinations(v for v in target.scope())
+        comb = combinations(self.nodes[v] for v in target.scope())
         idx = [i for i, n in enumerate(comb) if comb[i] == tuple][0]
         return idx
+
     def cpt_indices(self, target, val_dict):
         """
         Get the index of the CPT which corresponds
@@ -98,22 +113,18 @@ class BayesianNet:
         for rv, val in val_dict.items():
             val_idx = self.nodes[rv].value_idx(val)
             rv_idx = []
-            s_idx = val_idx*stride[rv]
+            try:
+                s_idx = val_idx*stride[rv]
+            except KeyError:
+                print("Key Error")
             while s_idx < len(target.cpt):
                 rv_idx.extend(range(s_idx,(s_idx+stride[rv])))
                 s_idx += stride[rv]*card[rv]
             idx = idx.intersection(set(rv_idx))
-        if len(list(idx))>1:
-            print("Len > 1")
+        if len(list(idx)) !=1:
+            print("Len != 1")
         return list(idx)[0]
-    def stride(self, rv, n):
-        if n==rv.name:
-            return 1
-        else:
-            card_list = [rv.card()]
-            card_list.extend([self.nodes[p].card() for p in rv.parents])
-            n_idx = rv.parents.index(n) + 1
-            return int(np.prod(card_list[0:n_idx]))
+
     def original_cpt_indices(self, target, val_dict):
         """
         Get the index of the CPT which corresponds
@@ -138,21 +149,20 @@ class BayesianNet:
         card = dict([(n, self.nodes[n].card()) for n in target.scope()])
         idx = set(range(len(target.originalcpt)))
         for rv, val in val_dict.items():
-            if rv in target.scope():
-                val_idx = self.nodes[rv].value_idx(val)
-                rv_idx = []
-                s_idx = val_idx * stride[rv]
-                while s_idx < len(target.originalcpt):
-                    rv_idx.extend(range(s_idx, (s_idx + stride[rv])))
-                    s_idx += stride[rv] * self.nodes[rv].card()
-                idx = idx.intersection(set(rv_idx))
+            val_idx = self.nodes[rv].value_idx(val)
+            rv_idx = []
+            s_idx = val_idx * stride[rv]
+            while s_idx < len(target.originalcpt):
+                rv_idx.extend(range(s_idx, (s_idx + stride[rv])))
+                s_idx += stride[rv] * card[rv]
+            idx = idx.intersection(set(rv_idx))
         if len(idx) != 1:
             print(target.name," ",val_dict)
         return list(idx)[0]
 
     def plot(self):
         G = nx.Graph()
-        G.add_nodes_from(self.getNodes())
+        G.add_nodes_from(self.getNodeKeys())
         for k, v in self.nodes.items():
             for vv in v.getChildren():
                 G.add_edge(k, vv)
@@ -167,11 +177,11 @@ if __name__ == "__main__":
     bn = BayesianNet()
     bn.readNetwork("resources/cancer3.bn")
     for v in bn.getNodes():
-        print(v,bn.nodes[v].scope())
+        print(v,v.scope())
         d = []
-        for s in bn.nodes[v].scope():
+        for s in v.scope():
             d.append(bn.nodes[s].domain)
-        comb = list(itertools.product(*d))
+        #comb = list(itertools.product(*d))
         #print(v,comb)
         csvFile = 'resources/datasets/10Cases.csv'
         with open(csvFile) as csvfile:

@@ -4,11 +4,11 @@ import BayesianNetwork
 #Calculates Kullback-Leibler divergency
 def calculateKLDivergency(bayesianNet):
     KLdivergence = 0.0
-    for t in combinations(bayesianNet.nodes[v] for v in bayesianNet.getNodes()):
+    for t in combinations(bayesianNet.getNodes()):
         d = dict()
-        for i,w in enumerate(bayesianNet.getNodes()):
+        for i,w in enumerate(bayesianNet.getNodeKeys()):
             d[w] = t[i]
-        KLdivergence += bayesianNet.original_full_joint(d) * (math.log(bayesianNet.original_full_joint(d) - math.log(bayesianNet.full_joint(d))))
+        KLdivergence += bayesianNet.original_full_joint(d) * (math.log(bayesianNet.original_full_joint(d)) - math.log(bayesianNet.full_joint(d)))
     bayesianNet.setDivergenceKL(KLdivergence)
     return KLdivergence
 
