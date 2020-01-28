@@ -1,1 +1,2 @@
-/resources/datasets/
+/resources/datasets/*
+!/resources/datasets/Example.csv

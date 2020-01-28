@@ -3,7 +3,6 @@ from KLDivergenceCalculation import combinations
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
-#import itertools
 import json
 import csv
 
@@ -14,6 +13,14 @@ class BayesianNet:
         self.nodes = dict()
 
     def readNetwork(self,path):
+        #creates a Bayesian Network from the provided input text file.
+        #the text file must be a valid json with
+        #V --> List of vertices of the network
+        #E --> Dictionary, containing for each node, its children.
+        #F --> Dictionary, containing for each node, its parents
+        # - A cpt as a 1-dimensional array. The columns must follow the order
+        # - The node's parents
+        # - An original pseudocount. If it is not known, an array containg zeros must be provided.
         with open(path, 'r') as f:
             inputNetwork = json.load(f)
         self.nodes = dict()
@@ -32,28 +39,24 @@ class BayesianNet:
             self.nodes[v].cpt=np.zeros(shape=(len(inputNetwork['F'][v]['cpt']),1))
             self.nodes[v].alphas = inputNetwork['F'][v]['alphas']
             self.nodes[v].originalcpt = inputNetwork['F'][v]['cpt']
-
+    #Setter and getter for KL divergency value
     def getDivergenceKL(self):
         return self.divergenceKL
     def setDivergenceKL(self, div):
         self.divergenceKL = div
+    #Getter for nodes
     def getNode(self,key):
         return self.nodes[key]
     def getNodes(self):
         return list(self.nodes.values())
     def getNodeKeys(self):
         return list(self.nodes.keys())
-
+    #Helpder functions that calculate a factor of a dictionary that
     def factor(self,rv,val_dict):
         return rv.cpt[self.cpt_indices(rv,val_dict)]
     def original_factor(self,rv,val_dict):
         return rv.originalcpt[self.original_cpt_indices(rv,val_dict)]
-
-    def combination_size(self):
-        size = 1
-        for v in self.getNodes():
-            size *= v.card()
-        return size
+    #
     def stride(self, rv, n):
         if n==rv.name:
             return 1
@@ -62,7 +65,7 @@ class BayesianNet:
             card_list.extend([self.nodes[p].card() for p in rv.parents])
             n_idx = rv.parents.index(n) + 1
             return int(np.prod(card_list[0:n_idx]))
-
+    #Returns the full joint as product of the factors for the specified values of the
     def full_joint(self,val_dict):
         prod = 1
         for n in self.getNodes():
@@ -76,7 +79,7 @@ class BayesianNet:
             t = dict((k, val_dict[k]) for k in n.scope())
             prod*= self.original_factor(n,t)
         return prod
-
+    #
     def cpt_idx(self, target, tuple):
         d = []
         comb = combinations(self.nodes[v] for v in target.scope())
@@ -159,7 +162,7 @@ class BayesianNet:
         if len(idx) != 1:
             print(target.name," ",val_dict)
         return list(idx)[0]
-
+    #Plots the network
     def plot(self):
         G = nx.Graph()
         G.add_nodes_from(self.getNodeKeys())

@@ -1,42 +1,10 @@
 from BayesianNetwork import BayesianNet
-import numpy as np
-#from MaximumLikelihood import MLE, arrayMLE,static_MLE
-from KLDivergenceCalculation import calculateKLDivergency, meanKL,combinations
-from BayesianEstimate import bayes_estimator,arrayBE
+from KLDivergenceCalculation import calculateKLDivergency
+from BayesianEstimate import bayes_estimator
 bn = BayesianNet()
 bn.readNetwork("resources/cancer3uniform.bn")
-#comb = combinations(bn)
-#x = bn.cpt_indices(bn.nodes["B"],dict({'A': 'Present', 'B':'Not increased','C':'Present','D':'Absent','E':'Present'}))
+bn.plot()
 
-#Calculate KL divergency for more datasets of lenght 10 learning parameter from ech trhough Maximum Likelihood
-# array10 = np.array([BayesianNet, 'resources/datasets/10Cases.csv'], [BayesianNet, 'resources/datasets/10_1Cases.csv'], [BayesianNet, 'resources/datasets/10_2Cases.csv'],
-#                         [BayesianNet, 'resources/datasets/10_3Cases.csv'], [BayesianNet, 'resources/datasets/10_4Cases.csv'], [BayesianNet, 'resources/datasets/10_5Cases.csv'],
-#                         [BayesianNet, 'resources/datasets/10_6Cases.csv'], [BayesianNet, 'resources/datasets/10_7Cases.csv'], [BayesianNet, 'resources/datasets/10_8Cases.csv'],
-#                         [BayesianNet, 'resources/datasets/10_9Cases.csv'], [BayesianNet, 'resources/datasets/10_10Cases.csv'])
-#
-# #bayes_estimator(bn, 'resources/datasets/10000Cases.csv')
-# #bn.plot()
-# arrayBE(array10)
-# # arrayMLE(array10)
-# # #arrayBE(array10)
-# #
-# # #Calculate KL divergency for more datasets of lenght 50 learning parameter from ech trhough Maximum Likelihood
-# array50 = np.array([[BayesianNet, '50Cases.csv'], [BayesianNet, '50_1Cases.csv'], [BayesianNet, '50_2Cases.csv'],
-#                         [BayesianNet, '50_3Cases.csv'], [BayesianNet, '50_4Cases.csv'], [BayesianNet, '50_5Cases.csv'],
-#                         [BayesianNet, '50_6Cases.csv'], [BayesianNet, '50_7Cases.csv'], [BayesianNet, '50_8Cases.csv'],
-#                         [BayesianNet, '50_9Cases.csv'], [BayesianNet, '50_10Cases.csv']])
-#
-# #arrayMLE(array50)
-# arrayBE(array50)
-#
-# #Calculate KL divergency for more datasets of lenght 100 learning parameter from ech trhough Maximum Likelihood
-# array100 = np.array([[BayesianNet, 'resources/datasets/100Cases.csv'], [BayesianNet, 'resources/datasets/100_1Cases.csv'], [BayesianNet, 'resources/datasets/100_2Cases.csv'],
-#                         [BayesianNet, 'resources/datasets/100_3Cases.csv'], [BayesianNet, 'resources/datasets/100_4Cases.csv'], [BayesianNet, 'resources/datasets/100_5Cases.csv'],
-#                         [BayesianNet, 'resources/datasets/100_6Cases.csv'], [BayesianNet, 'resources/datasets/100_7Cases.csv'], [BayesianNet, 'resources/datasets/100_8Cases.csv'],
-#                         [BayesianNet, 'resources/datasets/100_9Cases.csv'], [BayesianNet, 'resources/datasets/100_10Cases.csv']])
-#
-# #arrayMLE(array100)
-# arrayBE(array100)
 bNet10 = BayesianNet()
 bNet10.readNetwork("resources/cancer3uniform.bn")
 csvfile10 = 'resources/datasets/10Cases.csv'
@@ -170,31 +138,4 @@ csvfile10000 = 'resources/datasets/10000Cases.csv'
 #bayes_estimator(csvfile10000, bNet10000)
 bayes_estimator(csvfile10000, bNet10)
 print('KL divergence for n = 10000', calculateKLDivergency(bNet10))
-#print All Kullback-Leibler for all learned network
-# print('KL divergence for n = 10',meanKL(array10))
-# print('KL divergence for n = 50', meanKL(array50))
-# print('KL divergence for n = 100',meanKL(array100))
-
-#print('KL divergence for n = 10', calculateKLDivergency(bNet10))
-# print('KL divergence for n = 500', calculateKLDivergency(bNet500))
-# print('KL divergence for n = 750', calculateKLDivergency(bNet750))
-# print('KL divergence for n = 1000', calculateKLDivergency(bNet1000))
-# print('KL divergence for n = 1250', calculateKLDivergency(bNet1250))
-# print('KL divergence for n = 1500', calculateKLDivergency(bNet1500))
-# print('KL divergence for n = 1750', calculateKLDivergency(bNet1750))
-# print('KL divergence for n = 2000', calculateKLDivergency(bNet2000))
-# print('KL divergence for n = 2250', calculateKLDivergency(bNet2250))
-# print('KL divergence for n = 2500', calculateKLDivergency(bNet2500))
-# print('KL divergence for n = 3000', calculateKLDivergency(bNet3000))
-# # print('KL divergence for n = 3500', calculateKLDivergency(bNet3500))
-# print('KL divergence for n = 4000', calculateKLDivergency(bNet4000))
-# print('KL divergence for n = 4500', calculateKLDivergency(bNet4500))
-# print('KL divergence for n = 5000', calculateKLDivergency(bNet5000))
-# print('KL divergence for n = 6000', calculateKLDivergency(bNet6000))
-# print('KL divergence for n = 7000', calculateKLDivergency(bNet7000))
-# print('KL divergence for n = 8000', calculateKLDivergency(bNet8000))
-# print('KL divergence for n = 9000', calculateKLDivergency(bNet9000))
-# print('KL divergence for n = 10000', calculateKLDivergency(bNet10000))
-#
-
 

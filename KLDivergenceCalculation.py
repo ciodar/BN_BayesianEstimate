@@ -1,6 +1,6 @@
 import math
 import itertools
-import BayesianNetwork
+#import BayesianNetwork
 #Calculates Kullback-Leibler divergency
 def calculateKLDivergency(bayesianNet):
     KLdivergence = 0.0

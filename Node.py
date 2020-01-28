@@ -5,8 +5,11 @@ class Node:
 
     def __init__(self, name):
         self.name = name
+        #Array of pseudocounts
         self.alphas = np.array
+        #known cpt
         self.originalcpt = np.array
+        #result cpt from the estimation
         self.cpt = np.array
         self.parents = []
         self.children = []
