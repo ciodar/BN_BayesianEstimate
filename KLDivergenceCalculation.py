@@ -1,15 +1,14 @@
 import math
 import itertools
-#import BayesianNetwork
 #Calculates Kullback-Leibler divergency
-def calculateKLDivergency(bayesianNet):
+def calculateKLDivergency(bn):
     KLdivergence = 0.0
-    for t in combinations(bayesianNet.getNodes()):
+    for t in combinations(bn.getNodes()):
         d = dict()
-        for i,w in enumerate(bayesianNet.getNodeKeys()):
+        for i,w in enumerate(bn.getNodeKeys()):
             d[w] = t[i]
-        KLdivergence += bayesianNet.original_full_joint(d) * (math.log(bayesianNet.original_full_joint(d)) - math.log(bayesianNet.full_joint(d)))
-    bayesianNet.setDivergenceKL(KLdivergence)
+        KLdivergence += bn.original_full_joint(d) * (math.log(bn.original_full_joint(d)) - math.log(bn.full_joint(d)))
+    bn.setDivergenceKL(KLdivergence)
     return KLdivergence
 
 #estimates mean for al KL calculated in the netwok of the array

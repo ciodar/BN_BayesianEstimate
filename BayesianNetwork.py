@@ -1,5 +1,4 @@
 from Node import Node
-from KLDivergenceCalculation import combinations
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -51,11 +50,6 @@ class BayesianNet:
         return list(self.nodes.values())
     def getNodeKeys(self):
         return list(self.nodes.keys())
-    #Helpder functions that calculate a factor of a dictionary that
-    def factor(self,rv,val_dict):
-        return rv.cpt[self.cpt_indices(rv,val_dict)]
-    def original_factor(self,rv,val_dict):
-        return rv.originalcpt[self.original_cpt_indices(rv,val_dict)]
     #
     def stride(self, rv, n):
         if n==rv.name:
@@ -70,21 +64,15 @@ class BayesianNet:
         prod = 1
         for n in self.getNodes():
             t = dict((k, val_dict[k]) for k in n.scope())
-            prod*= self.factor(n,t)
+            prod*= n.cpt[self.cpt_indices(n,t)]
         return prod
 
     def original_full_joint(self,val_dict):
         prod = 1
         for n in self.getNodes():
             t = dict((k, val_dict[k]) for k in n.scope())
-            prod*= self.original_factor(n,t)
+            prod*= n.originalcpt[self.cpt_indices(n,t)]
         return prod
-    #
-    def cpt_idx(self, target, tuple):
-        d = []
-        comb = combinations(self.nodes[v] for v in target.scope())
-        idx = [i for i, n in enumerate(comb) if comb[i] == tuple][0]
-        return idx
 
     def cpt_indices(self, target, val_dict):
         """
@@ -126,41 +114,6 @@ class BayesianNet:
             idx = idx.intersection(set(rv_idx))
         if len(list(idx)) !=1:
             print("Len != 1")
-        return list(idx)[0]
-
-    def original_cpt_indices(self, target, val_dict):
-        """
-        Get the index of the CPT which corresponds
-        to a dictionary of rv=val sets. This can be
-        used for parameter learning to increment the
-        appropriate cpt frequency value based on
-        observations in the data.
-        There is definitely a fast way to do this.
-            -- check if (idx - rv_stride*value_idx) % (rv_card*rv_stride) == 0
-        Arguments
-        ---------
-        *target* : a Node object instance
-            Main RV
-        *val_dict* : a dictionary, where
-            key=rv,val=rv value
-        """
-        stride = dict([(n, self.stride(target, n)) for n in target.scope()])
-        # if len(val_dict)==len(self.parents(target)):
-        #    idx = sum([self.value_idx(rv,val)*stride[rv] \
-        #            for rv,val in val_dict.items()])
-        # else:
-        card = dict([(n, self.nodes[n].card()) for n in target.scope()])
-        idx = set(range(len(target.originalcpt)))
-        for rv, val in val_dict.items():
-            val_idx = self.nodes[rv].value_idx(val)
-            rv_idx = []
-            s_idx = val_idx * stride[rv]
-            while s_idx < len(target.originalcpt):
-                rv_idx.extend(range(s_idx, (s_idx + stride[rv])))
-                s_idx += stride[rv] * card[rv]
-            idx = idx.intersection(set(rv_idx))
-        if len(idx) != 1:
-            print(target.name," ",val_dict)
         return list(idx)[0]
     #Plots the network
     def plot(self):

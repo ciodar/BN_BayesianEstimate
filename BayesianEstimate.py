@@ -2,9 +2,8 @@ import csv
 import numpy as np
 import copy
 from BayesianNetwork import BayesianNet
-from KLDivergenceCalculation import combinations
 
-def bayes_estimator(csvFile,bn):
+def bayesEstimate(csvFile,bn):
     """
     Bayesian Estimation method of parameter learning.
     This method proceeds by either 1) assuming a uniform prior
@@ -24,7 +23,7 @@ def bayes_estimator(csvFile,bn):
         data = []
         for row in reader:
             data.append(row)
-    equiv_sample = len(data)
+    sampleSize = len(data)
 
     obs_dict = dict([(rv, []) for rv in bn.getNodeKeys()])
     # set empty conditional probability table for each RV
@@ -35,7 +34,7 @@ def bayes_estimator(csvFile,bn):
             rv.cpt = copy.deepcopy(rv.alphas)
         else:
         #Sets uniform distribution for each cell of cpt
-            rv.cpt = [equiv_sample / p_idx] * p_idx
+            rv.cpt = [sampleSize / p_idx] * p_idx
 
     # loop through each row of data
     for row in data:
@@ -67,7 +66,7 @@ def arrayBE(arr):
         bn = BayesianNet()
         bn.readNetwork("resources/cancer3.bn")
         arr[i][0] = bn
-        bayes_estimator(arr[i][1], arr[i][0])
+        bayesEstimate(arr[i][1], arr[i][0])
 
 if __name__ == "__main__":
     bn = BayesianNet()
