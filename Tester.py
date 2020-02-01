@@ -10,6 +10,14 @@ bNet10.readNetwork("resources/cancer3uniform.bn")
 csvfile10 = 'resources/datasets/10Cases.csv'
 bayesEstimate(csvfile10, bNet10)
 print('KL divergence for n = 10', calculateKLDivergency(bNet10))
+
+csvfile50 = 'resources/datasets/50Cases.csv'
+bayesEstimate(csvfile50, bNet10)
+print('KL divergence for n = 50', calculateKLDivergency(bNet10))
+
+csvfile100 = 'resources/datasets/100Cases.csv'
+bayesEstimate(csvfile100, bNet10)
+print('KL divergence for n = 100', calculateKLDivergency(bNet10))
 #
 #Calculate MLE for all other datasets
 # bNet250 = BayesianNet()

@@ -7,7 +7,10 @@ def calculateKLDivergency(bn):
         d = dict()
         for i,w in enumerate(bn.getNodeKeys()):
             d[w] = t[i]
-        KLdivergence += bn.original_full_joint(d) * (math.log(bn.original_full_joint(d)) - math.log(bn.full_joint(d)))
+        try:
+            KLdivergence += bn.original_full_joint(d) * (math.log(bn.original_full_joint(d)) - math.log(bn.full_joint(d)))
+        except ValueError:
+            print("Math domain error")
     bn.setDivergenceKL(KLdivergence)
     return KLdivergence
 
