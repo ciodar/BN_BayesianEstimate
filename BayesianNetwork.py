@@ -1,7 +1,7 @@
 from Node import Node
 import numpy as np
-import networkx as nx
-import matplotlib.pyplot as plt
+#import networkx as nx
+#import matplotlib.pyplot as plt
 import json
 import csv
 
@@ -116,17 +116,17 @@ class BayesianNet:
             print("Len != 1")
         return list(idx)[0]
     #Plots the network
-    def plot(self):
-        G = nx.Graph()
-        G.add_nodes_from(self.getNodeKeys())
-        for k, v in self.nodes.items():
-            for vv in v.getChildren():
-                G.add_edge(k, vv)
-        pos = nx.spring_layout(G)  # positions for all nodes
-        nx.draw_networkx_nodes(G, pos, node_size=500)
-        nx.draw_networkx_edges(G, pos)
-        nx.draw_networkx_labels(G, pos, font_size=10, font_family='sans-serif')
-        plt.show()
+    # def plot(self):
+    #     G = nx.Graph()
+    #     G.add_nodes_from(self.getNodeKeys())
+    #     for k, v in self.nodes.items():
+    #         for vv in v.getChildren():
+    #             G.add_edge(k, vv)
+    #     pos = nx.spring_layout(G)  # positions for all nodes
+    #     nx.draw_networkx_nodes(G, pos, node_size=500)
+    #     nx.draw_networkx_edges(G, pos)
+    #     nx.draw_networkx_labels(G, pos, font_size=10, font_family='sans-serif')
+    #     plt.show()
 
 if __name__ == "__main__":
 

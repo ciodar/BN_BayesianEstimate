@@ -3,7 +3,7 @@ from KLDivergenceCalculation import calculateKLDivergency
 from BayesianEstimate import bayesEstimate
 bn = BayesianNet()
 bn.readNetwork("resources/cancer3uniform.bn")
-bn.plot()
+#bn.plot()
 
 bNet10 = BayesianNet()
 bNet10.readNetwork("resources/cancer3uniform.bn")

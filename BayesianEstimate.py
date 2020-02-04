@@ -55,7 +55,7 @@ def bayesEstimate(csvFile,bn):
             #alphas_sum = float(np.sum(alphas[i:(i+rv.card())]))
             for j in range(rv.card()):
                 #
-                cpt[i + j] = (cpt[i + j] +1) / (temp_sum +2)
+                cpt[i + j] = (cpt[i + j] +1) / (temp_sum + rv.card())
                 #Rounds the calculated posterior probability to 2nd decimal
                 cpt[i + j] = round(cpt[i + j], 5)
                 #if(bn.nodes[rv].parents):

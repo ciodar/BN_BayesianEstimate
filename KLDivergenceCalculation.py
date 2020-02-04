@@ -1,5 +1,5 @@
 import math
-import itertools
+from itertools import product
 #Calculates Kullback-Leibler divergency
 def calculateKLDivergency(bn):
     KLdivergence = 0.0
@@ -26,4 +26,4 @@ def combinations(nodes):
     comb_list = []
     for v in nodes:
         comb_list.append(v.domain)
-    return list(itertools.product(*comb_list))
+    return list(product(*comb_list))

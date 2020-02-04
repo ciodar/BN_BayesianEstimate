@@ -41,8 +41,8 @@ Di seguito un esempio di lettura della rete,apprendimento e calcolo della diverg
     
     #Learning
     csvfile10 = 'resources/datasets/10Cases.csv'
-    bayes_estimator(csvfile10, bNet10)
+    bayes_estimator(csvfile10, bn)
     
     #Kullack-Leibler divergency
-    print('KL divergence for n = 10', calculateKLDivergency(bNet10))
+    print('KL divergence for n = 10', calculateKLDivergency(bn))
     
