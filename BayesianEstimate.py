@@ -1,6 +1,9 @@
 import csv
 import numpy as np
 import copy
+import scipy.stats as stats
+from matplotlib import pyplot as plt
+
 from BayesianNetwork import BayesianNet
 
 def bayesEstimate(csvFile,bn):
@@ -44,29 +47,32 @@ def bayesEstimate(csvFile,bn):
         for rv in bn.getNodes():
             rv_dict = {n: obs_dict[n] for n in obs_dict if n in rv.scope()}
             offset = bn.cpt_indices(target=rv, val_dict=rv_dict)
-            rv.cpt[offset] += 1
             rv.alphas[offset] +=1
-
-    for rv in bn.getNodes():
-        cpt = rv.cpt
-        alphas = rv.alphas
-        for i in range(0, len(rv.cpt), rv.card()):
-            temp_sum = float(np.sum(cpt[i:(i + rv.card())]))
-            #alphas_sum = float(np.sum(alphas[i:(i+rv.card())]))
-            for j in range(rv.card()):
-                #
-                cpt[i + j] = (cpt[i + j] +1) / (temp_sum + rv.card())
-                #Rounds the calculated posterior probability to 2nd decimal
-                cpt[i + j] = round(cpt[i + j], 5)
-                #if(bn.nodes[rv].parents):
-                    #print('P(',bn.nodes[rv].name,'=')
-        #print('CPT for ',rv,': ',cpt)
+        for rv in bn.getNodes():
+            for i in range(0, len(rv.cpt), rv.card()):
+                temp_sum = float(np.sum(rv.cpt[i:(i + rv.card())]))
+                alphas_sum = float(np.sum(rv.alphas[i:(i + rv.card())]))
+                for j in range(rv.card()):
+                    rv.cpt[i + j] = (rv.cpt[i + j] + rv.alphas[i+j]+1) / (temp_sum + alphas_sum + rv.card())
+                    # Rounds the calculated posterior probability to 2nd decimal
+                    rv.cpt[i + j] = round(rv.cpt[i + j], 5)
+    plotGamma(bn.getNode('A').alphas[0],bn.getNode('A').alphas[1])
 def arrayBE(arr):
     for i in range(len(arr)):
         bn = BayesianNet()
         bn.readNetwork("resources/cancer3.bn")
         arr[i][0] = bn
         bayesEstimate(arr[i][1], arr[i][0])
+def plotGamma(alpha,beta):
+    x = np.linspace (0,1, 200)
+    y1 = stats.gamma.pdf(x, a=alpha, scale=1/beta) #a is alpha, loc is beta???
+    plt.plot(x, y1, "y-", label=(r'$\alpha=29, \beta=3$'))
+    plt.show()
+
+
+plt.ylim([0,0.08])
+plt.xlim([0,150])
+plt.show()
 
 if __name__ == "__main__":
     bn = BayesianNet()

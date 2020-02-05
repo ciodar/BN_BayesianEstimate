@@ -140,10 +140,12 @@ csvfile9000 = 'resources/datasets/9000Cases.csv'
 bayesEstimate(csvfile9000, bNet10)
 print('KL divergence for n = 9000', calculateKLDivergency(bNet10))
 
-# bNet10000 = BayesianNet()
-# bNet10000.readNetwork("resources/cancer3uniform.bn")
+#bNet10000 = BayesianNet()
+#bNet10000.readNetwork("resources/cancer3uniform.bn")
 csvfile10000 = 'resources/datasets/10000Cases.csv'
-#bayesEstimate(csvfile10000, bNet10000)
+##bayesEstimate(csvfile10000, bNet10000)
 bayesEstimate(csvfile10000, bNet10)
 print('KL divergence for n = 10000', calculateKLDivergency(bNet10))
+#print('KL divergence for n = 10000', calculateKLDivergency(bNet10000))
+
 
