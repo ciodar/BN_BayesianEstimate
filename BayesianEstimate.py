@@ -7,20 +7,6 @@ from matplotlib import pyplot as plt
 from BayesianNetwork import BayesianNet
 
 def bayesEstimate(csvFile,bn):
-    """
-    Bayesian Estimation method of parameter learning.
-    This method proceeds by either 1) assuming a uniform prior
-    over the parameters based on the Dirichlet distribution
-    with an equivalent sample size = csvFile size if the prior distribution is equal to 0,
-    or 2) assuming a prior as specified by the user within the *prior_dict* argument.
-    The prior distribution is then updated from observations in the data based on the
-    Multinomial distribution - for which the Dirichlet
-    is a "conjugate prior."
-    Arguments
-    ---------
-    *bn* : a BayesianNetwork object
-    *csvFile* : a csv file, with RV name in the first line. The order of the variables must follow the first line.
-    """
     with open(csvFile) as csvfile:
         reader = csv.DictReader(csvfile, delimiter=';')
         data = []
@@ -31,7 +17,7 @@ def bayesEstimate(csvFile,bn):
     obs_dict = dict([(rv, []) for rv in bn.getNodeKeys()])
     # set empty conditional probability table for each RV
     for rv in bn.getNodes():
-        # get number of values in the CPT = product of scope vars' cardinalities
+        # get number of values in the CPT
         p_idx = int(np.prod([bn.nodes[p].card() for p in rv.parents]) * rv.card())
         if rv.alphas != list(np.zeros(shape=(p_idx,1))):
             rv.cpt = copy.deepcopy(rv.alphas)
@@ -47,6 +33,7 @@ def bayesEstimate(csvFile,bn):
         for rv in bn.getNodes():
             rv_dict = {n: obs_dict[n] for n in obs_dict if n in rv.scope()}
             offset = bn.cpt_indices(target=rv, val_dict=rv_dict)
+            #increments the virtual count
             rv.alphas[offset] +=1
         for rv in bn.getNodes():
             for i in range(0, len(rv.cpt), rv.card()):
@@ -65,14 +52,9 @@ def arrayBE(arr):
         bayesEstimate(arr[i][1], arr[i][0])
 def plotGamma(alpha,beta):
     x = np.linspace (0,1, 200)
-    y1 = stats.gamma.pdf(x, a=alpha, scale=1/beta) #a is alpha, loc is beta???
+    y1 = stats.gamma.pdf(x, a=alpha, scale=1/beta) #a is alpha, 1/scale is beta
     plt.plot(x, y1, "y-", label=(r'$\alpha=29, \beta=3$'))
     plt.show()
-
-
-plt.ylim([0,0.08])
-plt.xlim([0,150])
-plt.show()
 
 if __name__ == "__main__":
     bn = BayesianNet()
