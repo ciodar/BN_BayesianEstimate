@@ -1,8 +1,8 @@
 import csv
 import numpy as np
 import copy
-import scipy.stats as stats
-from matplotlib import pyplot as plt
+#import scipy.stats as stats
+#from matplotlib import pyplot as plt
 
 from BayesianNetwork import BayesianNet
 
@@ -43,18 +43,18 @@ def bayesEstimate(csvFile,bn):
                     rv.cpt[i + j] = (rv.cpt[i + j] + rv.alphas[i+j]+1) / (temp_sum + alphas_sum + rv.card())
                     # Rounds the calculated posterior probability to 2nd decimal
                     rv.cpt[i + j] = round(rv.cpt[i + j], 5)
-    plotGamma(bn.getNode('A').alphas[0],bn.getNode('A').alphas[1])
+    #plotGamma(bn.getNode('A').alphas[0],bn.getNode('A').alphas[1])
 def arrayBE(arr):
     for i in range(len(arr)):
         bn = BayesianNet()
         bn.readNetwork("resources/cancer3.bn")
         arr[i][0] = bn
         bayesEstimate(arr[i][1], arr[i][0])
-def plotGamma(alpha,beta):
-    x = np.linspace (0,1, 200)
-    y1 = stats.gamma.pdf(x, a=alpha, scale=1/beta) #a is alpha, 1/scale is beta
-    plt.plot(x, y1, "y-", label=(r'$\alpha=29, \beta=3$'))
-    plt.show()
+# def plotGamma(alpha,beta):
+#     x = np.linspace (0,1, 200)
+#     y1 = stats.gamma.pdf(x, a=alpha, scale=1/beta) #a is alpha, 1/scale is beta
+#     plt.plot(x, y1, "y-", label=(r'$\alpha=29, \beta=3$'))
+#     plt.show()
 
 if __name__ == "__main__":
     bn = BayesianNet()
