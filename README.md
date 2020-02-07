@@ -29,7 +29,8 @@ La distanza tra la distribuzione appresa e la distribuzione p nota viene calcola
 
 #### Esempio
 
-Di seguito un esempio di lettura della rete,apprendimento e calcolo della divergenza
+Di seguito un esempio di lettura della rete,apprendimento e calcolo della divergenza. 
+La classe Tester.py presenta in maniera più estesa il codice utilizzato per la generazione dei risultati descritti nella relazione.
     
     from BayesianNetwork import BayesianNet
     from KLDivergenceCalculation import calculateKLDivergency
